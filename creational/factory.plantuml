@@ -1,0 +1,11 @@
+@startuml factory
+scale 2
+
+interface Human{
+    Laugh()
+}
+' ' hide Human field
+
+newHuman ..|> Human
+
+@enduml
