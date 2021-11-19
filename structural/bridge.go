@@ -2,109 +2,79 @@ package structural
 
 import "fmt"
 
-//type message interface {
-//	send()
-//}
-//
-//type commonMessageSMS struct {
-//
-//}
-//
-//func (c *commonMessageSMS) send(){
-//	fmt.Println("sms send")
-//}
-//
-//type commonMessageEmail struct {
-//
-//}
-//
-//func (c *commonMessageEmail) send(){
-//	fmt.Println("email send")
-//}
-//
-//type UrgencyMessage interface {
-//	message
-//	watch()
-//}
-//
-//type urgencyMessageSMS struct {
-//
-//}
-//
-//func (u *urgencyMessageSMS) watch(){
-//	fmt.Println("urgency sms watch")
-//}
-//
-//func (u *urgencyMessageSMS) send(){
-//	fmt.Println("urgency sms send")
-//}
-//
-//type urgencyMessageEmail struct {
-//
-//}
-//
-//func (u *urgencyMessageEmail) watch(){
-//	fmt.Println("urgency email watch")
-//}
-//
-//func (u *urgencyMessageEmail) send(){
-//	fmt.Println("urgency email send")
-//}
-//
-//func test(m message){
-//	m.send()
-//}
+// 桥接模式用来解决什么问题？抽象层包含实现层的引用。（抽象层有接口和实现、实现层也有接口和实现，抽象层的实现包含对实现层的引用，因为可以将抽象层的大部分调用委派给实现层）
+// 抽象层和实现层如果平铺组合关系，会导致类的指数级膨胀，使用桥接模式通过增加层次结构，降低类的数量。
+// 桥接模式包含：实施层、抽象层
 
-
-// 桥接模式的实现
-type messageImpl interface {
-	send()
+// 实现层
+type printer interface {
+	printFile()
 }
 
-type MessageSms struct {
+type epson struct {}
 
+func (p *epson) printFile() {
+	fmt.Println("Printing by a EPSON Printer")
 }
 
-func (m *MessageSms) send(){
-	fmt.Println("message sms send")
+type hp struct {}
+
+func (p *hp) printFile() {
+	fmt.Println("Printing by a HP Printer")
 }
 
-type MessageEmail struct {
-
+// 抽象层
+type computer interface {
+	print()
+	setPrinter(printer)
 }
 
-func (m *MessageEmail) send(){
-	fmt.Println("message email send")
+type mac struct {
+	printer printer
 }
 
-type abstractMessage interface {
-	messageImpl
-	sendMessage()
+func (m *mac) print() {
+	fmt.Println("Print request for mac")
+	m.printer.printFile()
 }
 
-type commonMessage struct {
-	abstractMessage
+func (m *mac) setPrinter(p printer) {
+	m.printer = p
+}
+type windows struct {
+	printer printer
 }
 
-func (c *commonMessage) sendMessage(){
-
+func (w *windows) print() {
+	fmt.Println("Print request for windows")
+	w.printer.printFile()
 }
 
-type urgencyMessage struct {
-	abstractMessage
-}
-
-func (u *urgencyMessage) sendMessage(){
-
-}
-
-func (u *urgencyMessage) watch(){
-
+func (w *windows) setPrinter(p printer) {
+	w.printer = p
 }
 
 func test(){
-	m := MessageSms{}
-	c := commonMessage{}
+	hpPrinter := &hp{}
+	epsonPrinter := &epson{}
 
+	macComputer := &mac{}
 
+	macComputer.setPrinter(hpPrinter)
+	macComputer.print()
+	fmt.Println()
+
+	macComputer.setPrinter(epsonPrinter)
+	macComputer.print()
+	fmt.Println()
+
+	winComputer := &windows{}
+
+	winComputer.setPrinter(hpPrinter)
+	winComputer.print()
+	fmt.Println()
+
+	winComputer.setPrinter(epsonPrinter)
+	winComputer.print()
+	fmt.Println()
 }

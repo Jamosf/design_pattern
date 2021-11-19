@@ -1,0 +1,19 @@
+@startuml factory
+scale 1
+
+interface AbstractProduct{}
+
+interface AbstractFactory{
+    CreateProduct()
+}
+
+class ConcreteProduct{}
+
+class ConcreteFactory{}
+
+AbstractProduct <|.. ConcreteProduct
+AbstractFactory <|.. ConcreteFactory
+
+ConcreteProduct <-right- ConcreteFactory
+
+@enduml

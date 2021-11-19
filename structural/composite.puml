@@ -1,0 +1,21 @@
+@startuml factory
+scale 1
+
+interface Component{}
+
+class Leaf{
+    execute()
+}
+
+class Composite{
+    children []Component
+    add(c Component)
+    remove(c Component))
+    getChildren() []Component
+    execute()
+}
+
+Component <|.. Leaf
+Component <|.. Composite
+
+@enduml
